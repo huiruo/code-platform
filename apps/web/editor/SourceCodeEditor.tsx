@@ -1,11 +1,8 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useImperativeHandle, forwardRef } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 import Editor from '@monaco-editor/react'
 import type monaco from 'monaco-editor'
-
-type Props = {
-  lang?: string
-}
+import { runCodeApi } from '@services/api'
 
 const langMap: Record<any, string> = {
   py: 'python',
@@ -16,11 +13,28 @@ const langMap: Record<any, string> = {
 
 const test = `console.log('hello world')`
 
-export const SourceCodeEditor = ({ }: Props) => {
+// export const SourceCodeEditor = ({ }: Props) => {
+export const SourceCodeEditor = forwardRef((props, ref) => {
+
   const [value, setValue] = useState<string>(test || '')
   const lang = 'typescript'
-  const ref = useRef<HTMLDivElement>(null)
+  const htmlRef = useRef<HTMLDivElement>(null)
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>()
+
+  useImperativeHandle(ref, () => ({
+    runCode: async () => {
+      console.log('code:', value);
+      if (!value) {
+        console.log('please enter code')
+        return
+      }
+
+      const res = await runCodeApi({ type: 'js', code: value })
+      console.log('res', res)
+      const data = await res.json();
+      console.log('onRunJs', data)
+    },
+  }));
 
   const saveCode = useDebouncedCallback(async (code: string) => {
     // const langMap: Record<string, StrategyLang> = {
@@ -45,6 +59,8 @@ export const SourceCodeEditor = ({ }: Props) => {
     }
   }, 1000)
 
+  console.log('code val:', value)
+
   return (
     <div style={{ height: 'calc(100vh - 200px)' }}>
       <Editor
@@ -61,10 +77,6 @@ export const SourceCodeEditor = ({ }: Props) => {
           overviewRulerLanes: 0,
         }}
         defaultLanguage={lang || 'typescript'}
-        // style={{
-        //   border: 1,
-        //   height: 'calc(100vh - 20px)',
-        // }}
         value={value}
         theme="vs-dark"
         onChange={(v) => {
@@ -102,7 +114,6 @@ export const SourceCodeEditor = ({ }: Props) => {
                 binance: any
                 binanceWebsocket: any
               }
-
             }
           `
 
@@ -127,9 +138,9 @@ export const SourceCodeEditor = ({ }: Props) => {
           editorRef.current = editor
           // editor.updateOptions({})
 
-          if (!ref.current || !editorRef.current) return
+          if (!htmlRef.current || !editorRef.current) return
 
-          const container = ref.current
+          const container = htmlRef.current
 
           const updateHeight = () => {
             const contentHeight = Math.min(800, editor.getContentHeight())
@@ -147,4 +158,4 @@ export const SourceCodeEditor = ({ }: Props) => {
       />
     </div>
   )
-}
+})

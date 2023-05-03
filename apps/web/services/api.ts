@@ -1,3 +1,5 @@
+import { Container, TaskCode } from "types"
+
 const baseUrl = '/code-platform'
 
 export async function fetchCode(params?: any): Promise<any> {
@@ -18,10 +20,10 @@ export async function fetchCode(params?: any): Promise<any> {
   }
 }
 
-export async function runCodeApi(params?: any): Promise<any> {
+export async function runCodeApi(params: TaskCode): Promise<any> {
   try {
-    return fetch(`${baseUrl}/code-engine/codeList`, {
-      method: 'GET',
+    return fetch(`${baseUrl}/code-engine/runCode`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -36,11 +38,10 @@ export async function runCodeApi(params?: any): Promise<any> {
   }
 }
 
-
-export async function getContainerStatusApi(params?: any): Promise<any> {
+export async function getContainerStatusApi(params: Container): Promise<any> {
   try {
     return fetch(`${baseUrl}/code-engine/getContainerStatus`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },

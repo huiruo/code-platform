@@ -1,8 +1,10 @@
 import { SourceCodeEditor } from "@editor/SourceCodeEditor";
 import { fetchCode, getRunningContainerApi, getContainerStatusApi, runCodeApi } from "@services/api";
+import { useRef } from "react";
 import { Button } from "ui";
 
 export default function Web() {
+  const editorRef: any = useRef(null);
 
   // const onRun = async () => {
   //   console.log('onRun-->');
@@ -13,22 +15,22 @@ export default function Web() {
   // }
 
   const onRunJs = async () => {
-    console.log('onRun-->');
-    const res = await runCodeApi()
-    console.log('res', res)
-    const data = await res.json();
-    console.log('onRunJs', data)
+    console.log('onRunJs-->');
+
+    if (editorRef.current) {
+      editorRef.current.runCode();
+    }
   }
 
   const onGetContainerStatus = async () => {
-    console.log('onRun-->');
-    const res = await getContainerStatusApi()
+    const containerName = '1874f672f0a7'
+    // const containerName = '1874f672f0a7-aa'
+    const res = await getContainerStatusApi({ containerName })
     const data = await res.json();
     console.log('getRunningContainerApi', data)
   }
 
   const onGetRunningContainer = async () => {
-    console.log('onRun-->');
     const res = await getRunningContainerApi()
     const data = await res.json();
     console.log('getRunningContainerApi', data)
@@ -43,10 +45,6 @@ export default function Web() {
       </div> */}
 
       <div>
-        <button onClick={onRunJs}>run js</button>
-      </div>
-
-      <div>
         <button onClick={onGetContainerStatus}>get Container Status</button>
       </div>
 
@@ -55,8 +53,10 @@ export default function Web() {
       </div>
 
       <div>
-        <SourceCodeEditor />
+        <button onClick={onRunJs}>run js</button>
       </div>
+
+      <SourceCodeEditor ref={editorRef} />
     </div>
   );
 }
