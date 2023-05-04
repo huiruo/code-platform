@@ -13,7 +13,6 @@ const langMap: Record<any, string> = {
 
 const test = `console.log('hello world')`
 
-// export const SourceCodeEditor = ({ }: Props) => {
 export const SourceCodeEditor = forwardRef((props, ref) => {
 
   const [value, setValue] = useState<string>(test || '')
