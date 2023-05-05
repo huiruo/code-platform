@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
-    "prod": "cross-env NODE_ENV=prod ts-node ./src/index.js"
+    "prod": "cross-env NODE_ENV=prod node ./src/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cross-env": "^7.0.3",
     "express": "^4.18.2",
     "nodemon": "^2.0.22"
   }
