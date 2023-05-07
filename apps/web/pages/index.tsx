@@ -1,5 +1,5 @@
 import { SourceCodeEditor } from "@editor/SourceCodeEditor";
-import { fetchCode, getRunningContainerApi, getContainerStatusApi, runCodeApi, stopContainerApi, startContainerApi } from "@services/api";
+import { fetchCode, getRunningContainerApi, getContainerStatusApi, runCodeApi, stopContainerApi, startContainerApi, buildImageApi } from "@services/api";
 import { useRef } from "react";
 import { Button } from "ui";
 
@@ -52,6 +52,16 @@ export default function Web() {
     console.log('onStopContainer', data)
   }
 
+  const onBuildImage = async () => {
+    const params = {
+      dockerfileName: 'node.client',
+      imageName: 'node-client'
+    }
+    const res = await buildImageApi(params)
+    const data = await res.json();
+    console.log('onStopContainer', data)
+  }
+
   return (
     <div>
       <h1>Web</h1>
@@ -78,6 +88,10 @@ export default function Web() {
 
       <div>
         <button onClick={onStartContainer}>Start Container</button>
+      </div>
+
+      <div>
+        <button onClick={onBuildImage}>build Image</button>
       </div>
 
       <SourceCodeEditor ref={editorRef} />
