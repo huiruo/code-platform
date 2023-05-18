@@ -3,7 +3,7 @@ import useFetchUser from '@hooks/useFetchImages';
 import { Button } from 'antd';
 import { Pagination, Table as AntTable } from 'antd';
 
-export function Image() {
+export function Containers() {
   const [images, isLoading, error] = useFetchUser()
   if (isLoading) {
     console.log(images)

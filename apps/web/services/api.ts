@@ -127,3 +127,21 @@ export async function buildImageApi(params: BuildImage): Promise<any> {
     }
   }
 }
+
+
+export async function listImagesApi(): Promise<any> {
+  try {
+    return fetch(`${baseUrl}/code-engine/listImg`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  } catch (error) {
+    console.error('NetWork Error', error)
+    return {
+      code: 0,
+      message: error,
+    }
+  }
+}

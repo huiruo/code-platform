@@ -1,3 +1,4 @@
+import { listImagesApi } from '@services/api';
 import { useState, useEffect } from 'react';
 
 interface User {
@@ -7,7 +8,7 @@ interface User {
 }
 
 const useFetchUser = (): [User | null, boolean, Error | null] => {
-  const [user, setUser] = useState<User | null>(null);
+  const [data, setData] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -16,9 +17,13 @@ const useFetchUser = (): [User | null, boolean, Error | null] => {
       setIsLoading(true);
 
       try {
-        const response = await fetch('https://example.com/user');
-        const data = await response.json();
-        setUser(data);
+        const res = await listImagesApi()
+        const data = await res.json();
+        if (data.code === 1) {
+          setData(data.data);
+        } else {
+          setError(data.msg)
+        }
       } catch (error: any) {
         setError(error);
       }
@@ -29,7 +34,7 @@ const useFetchUser = (): [User | null, boolean, Error | null] => {
     fetchUser();
   }, []);
 
-  return [user, isLoading, error];
+  return [data, isLoading, error];
 };
 
 export default useFetchUser;
