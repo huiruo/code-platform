@@ -1,4 +1,4 @@
-import { BuildImage, Container, TaskCode } from "types"
+import { BuildImage, Container, GetContainers, TaskCode } from "types"
 
 const baseUrl = '/code-platform'
 
@@ -128,7 +128,6 @@ export async function buildImageApi(params: BuildImage): Promise<any> {
   }
 }
 
-
 export async function listImagesApi(): Promise<any> {
   try {
     return fetch(`${baseUrl}/code-engine/listImg`, {
@@ -136,6 +135,24 @@ export async function listImagesApi(): Promise<any> {
       headers: {
         'Content-Type': 'application/json',
       },
+    })
+  } catch (error) {
+    console.error('NetWork Error', error)
+    return {
+      code: 0,
+      message: error,
+    }
+  }
+}
+
+export async function listContainersApi(params: GetContainers): Promise<any> {
+  try {
+    return fetch(`${baseUrl}/code-engine/listContainers`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
     })
   } catch (error) {
     console.error('NetWork Error', error)
