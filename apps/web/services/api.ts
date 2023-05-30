@@ -162,3 +162,20 @@ export async function listContainersApi(params: GetContainers): Promise<any> {
     }
   }
 }
+export async function runDockerUseImgApi(params: GetContainers): Promise<any> {
+  try {
+    return fetch(`${baseUrl}/code-engine/buildDockerImage`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    })
+  } catch (error) {
+    console.error('NetWork Error', error)
+    return {
+      code: 0,
+      message: error,
+    }
+  }
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import useFetchUser from '@hooks/useFetchImages';
 import {Button} from 'antd';
 import {Pagination, Table as AntTable} from 'antd';
+import {listContainersApi, runDockerUseImgApi} from '@services/api';
 
 export function Image() {
     const [images, isLoading, error] = useFetchUser()
@@ -9,8 +10,16 @@ export function Image() {
         console.log('isLoading:',images)
     }
 
-    const onStartImg = () =>{
-       console.log('onStart')
+    const onRunImg = async (item) =>{
+        const params = {...item}
+        const res = await runDockerUseImgApi(params)
+        const data = await res.json();
+        console.log('onRunImg-res', data)
+        if (data.code === 1) {
+            console.log('onRunImg-sus')
+        } else {
+            alert(data.msg)
+        }
     }
 
     const onStopImg = () =>{
@@ -27,7 +36,7 @@ export function Image() {
             id: 'action', title: 'Action', dataIndex: '', key: 'action', width: 150,
             render(item) {
                 return <>
-                    <Button type="primary" className='img-start-btn' onClick={onStartImg}>运行</Button>
+                    <Button type="primary" className='img-start-btn' onClick={()=>onRunImg(item)}>运行</Button>
                     <Button type="primary" danger onClick={onStopImg}>停止</Button>
                 </>
             },
