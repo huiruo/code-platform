@@ -1,11 +1,11 @@
 import React from 'react';
-import useFetchUser from '@hooks/useFetchImages';
+import useFetchImg from '@hooks/useFetchImages';
 import {Button} from 'antd';
 import {Pagination, Table as AntTable} from 'antd';
-import {listContainersApi, runDockerUseImgApi} from '@services/api';
+import {runDockerUseImgApi} from '@services/api';
 
 export function Image() {
-    const [images, isLoading, error] = useFetchUser()
+    const [images, isLoading, error] = useFetchImg()
     if (isLoading) {
         console.log('isLoading:',images)
     }
@@ -18,7 +18,7 @@ export function Image() {
         if (data.code === 1) {
             console.log('onRunImg-sus')
         } else {
-            alert(data.msg)
+            console.log('onRunImg',data.msg)
         }
     }
 

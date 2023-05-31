@@ -1,11 +1,36 @@
 import React, {useEffect, useState} from 'react';
 import useFetchUser from '@hooks/useFetchImages';
-import {Button} from 'antd';
+import {Button,message} from 'antd';
 import {Pagination, Table as AntTable} from 'antd';
-import {listContainersApi} from '@services/api';
+import {listContainersApi, startContainerApi,stopContainerApi} from '@services/api';
 
 export function Containers() {
     const [containers, setContainers] = useState([])
+
+    const onRunContainer = async (item) =>{
+        const params = {...item}
+        const res = await startContainerApi(params)
+        const data = await res.json();
+        console.log('onRunImg-res', data)
+        if (data.code === 1) {
+            console.log('onRunImg-sus')
+        } else {
+            console.log('onRunContainer:',data.msg)
+        }
+    }
+
+    const onStopImg = async(item) =>{
+        console.log('onStopImg')
+        const params = {...item}
+        const res = await stopContainerApi(params)
+        const data = await res.json();
+        console.log('onRunImg-res', data)
+        if (data.code === 1) {
+            console.log('onRunImg-sus')
+        } else {
+            console.log('onStopImg:',data.msg)
+        }
+    }
 
     const columns = [
         {id: 'Id', title: 'id', dataIndex: 'Id', key: 'Id', width: 100},
@@ -24,6 +49,15 @@ export function Containers() {
         {id: 'created', title: 'created', dataIndex: 'created', key: 'created', width: 100},
         {id: 'State', title: 'State', dataIndex: 'State', key: 'State', width: 100},
         {id: 'Status', title: 'Status', dataIndex: 'Status', key: 'Status', width: 100},
+        {
+            id: 'action', title: 'Action', dataIndex: '', key: 'action', width: 200,
+            render(item) {
+                return <>
+                    <Button type="primary" className='img-start-btn' onClick={()=>onRunContainer(item)}>运行</Button>
+                    <Button type="primary" danger onClick={()=>onStopImg(item)}>停止</Button>
+                </>
+            },
+        },
     ]
 
     const listContainers = async (isRunning) => {
@@ -34,7 +68,8 @@ export function Containers() {
         if (data.code === 1) {
             setContainers(data.data)
         } else {
-            alert(data.msg)
+            const isObject = Object.prototype.toString.call(data.msg) ==='[object Object]'
+            message.warning(isObject?JSON.stringify(data.msg):data.msg)
         }
     }
 
@@ -45,10 +80,10 @@ export function Containers() {
 
     return (
         <div className="App">
-            <Button type="primary">Button</Button>
             <AntTable
                 rowKey="Id"
-                columns={columns} dataSource={containers}
+                columns={columns}
+                dataSource={containers}
                 pagination={false}
             />
         </div>

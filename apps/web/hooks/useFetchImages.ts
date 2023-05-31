@@ -1,19 +1,21 @@
 import { listImagesApi } from '@services/api';
 import { useState, useEffect } from 'react';
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
+interface ImgType {
+  containers : number
+  created : number
+  id : string
+  name : string
+  size : number
 }
 
-const useFetchUser = (): [User | null, boolean, Error | null] => {
-  const [data, setData] = useState<User | null>(null);
+const useFetchImg = (): [(ImgType[]), boolean, (Error | null)] => {
+  const [data, setData] = useState<ImgType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchImages = async () => {
       setIsLoading(true);
 
       try {
@@ -31,10 +33,10 @@ const useFetchUser = (): [User | null, boolean, Error | null] => {
       setIsLoading(false);
     };
 
-    fetchUser();
+    fetchImages();
   }, []);
 
   return [data, isLoading, error];
 };
 
-export default useFetchUser;
+export default useFetchImg;

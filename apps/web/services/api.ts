@@ -74,42 +74,6 @@ export async function getRunningContainerApi(params?: any): Promise<any> {
   }
 }
 
-export async function stopContainerApi(params: Container): Promise<any> {
-  try {
-    return fetch(`${baseUrl}/code-engine/stopContainer`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-    })
-  } catch (error) {
-    console.error('NetWork Error', error)
-    return {
-      code: 0,
-      message: error,
-    }
-  }
-}
-
-export async function startContainerApi(params: Container): Promise<any> {
-  try {
-    return fetch(`${baseUrl}/code-engine/startContainer`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-    })
-  } catch (error) {
-    console.error('NetWork Error', error)
-    return {
-      code: 0,
-      message: error,
-    }
-  }
-}
-
 export async function buildImageApi(params: BuildImage): Promise<any> {
   try {
     return fetch(`${baseUrl}/code-engine/buildDockerImage`, {
@@ -162,9 +126,49 @@ export async function listContainersApi(params: GetContainers): Promise<any> {
     }
   }
 }
+
+// 运行镜像的形式启动容器
 export async function runDockerUseImgApi(params: GetContainers): Promise<any> {
   try {
     return fetch(`${baseUrl}/code-engine/buildDockerImage`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    })
+  } catch (error) {
+    console.error('NetWork Error', error)
+    return {
+      code: 0,
+      message: error,
+    }
+  }
+}
+
+// 运行已有容器
+export async function startContainerApi(params: Container): Promise<any> {
+  try {
+    return fetch(`${baseUrl}/code-engine/startContainer`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    })
+  } catch (error) {
+    console.error('NetWork Error', error)
+    return {
+      code: 0,
+      message: error,
+    }
+  }
+}
+
+// 停止运行的容器
+export async function stopContainerApi(params: Container): Promise<any> {
+  try {
+    return fetch(`${baseUrl}/code-engine/stopContainer`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
