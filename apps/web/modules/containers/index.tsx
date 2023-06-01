@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import useFetchUser from '@hooks/useFetchImages';
 import {Button,message} from 'antd';
 import {Pagination, Table as AntTable} from 'antd';
 import {listContainersApi, startContainerApi,stopContainerApi} from '@services/api';
@@ -8,27 +7,34 @@ export function Containers() {
     const [containers, setContainers] = useState([])
 
     const onRunContainer = async (item) =>{
-        const params = {...item}
+        console.log('docker',item)
+        const params = {...item,containerName:item.Names?.[0]}
         const res = await startContainerApi(params)
         const data = await res.json();
         console.log('onRunImg-res', data)
         if (data.code === 1) {
-            console.log('onRunImg-sus')
+            message.success(data.msg)
+            console.log('重新刷新数据2')
+            listContainers()
         } else {
-            console.log('onRunContainer:',data.msg)
+            const isObject = Object.prototype.toString.call(data.msg) ==='[object Object]'
+            message.warning(isObject?JSON.stringify(data.msg):data.msg)
         }
     }
 
-    const onStopImg = async(item) =>{
+    const onStopContainer = async(item) =>{
         console.log('onStopImg')
-        const params = {...item}
+        const params = {...item,containerName:item.Names?.[0]}
         const res = await stopContainerApi(params)
         const data = await res.json();
         console.log('onRunImg-res', data)
         if (data.code === 1) {
-            console.log('onRunImg-sus')
+            message.success(data.msg)
+            console.log('重新刷新数据1')
+            listContainers()
         } else {
-            console.log('onStopImg:',data.msg)
+            const isObject = Object.prototype.toString.call(data.msg) ==='[object Object]'
+            message.warning(isObject?JSON.stringify(data.msg):data.msg)
         }
     }
 
@@ -53,14 +59,14 @@ export function Containers() {
             id: 'action', title: 'Action', dataIndex: '', key: 'action', width: 200,
             render(item) {
                 return <>
-                    <Button type="primary" className='img-start-btn' onClick={()=>onRunContainer(item)}>运行</Button>
-                    <Button type="primary" danger onClick={()=>onStopImg(item)}>停止</Button>
+                    {item.State !=='exited'&&(<Button type="primary" danger onClick={()=>onStopContainer(item)}>停止</Button>)}
+                    {item.State ==='exited'&&(<Button type="primary" className='img-start-btn' onClick={()=>onRunContainer(item)}>运行</Button>)}
                 </>
             },
         },
     ]
 
-    const listContainers = async (isRunning) => {
+    const listContainers = async (isRunning= false) => {
         const params = {isRunning}
         const res = await listContainersApi(params)
         const data = await res.json();
@@ -74,8 +80,7 @@ export function Containers() {
     }
 
     useEffect(() => {
-        const type = false
-        listContainers(type)
+        listContainers()
     }, [])
 
     return (
