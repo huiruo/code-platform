@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button,message} from 'antd';
 import {Pagination, Table as AntTable} from 'antd';
 import {listContainersApi, startContainerApi,stopContainerApi} from '@services/api';
+import Layout from "@components/layout";
 
 export function Containers() {
     const [containers, setContainers] = useState([])
@@ -46,8 +47,10 @@ export function Containers() {
             render(item: any) {
                 console.log('item', item.Names)
                 return <div>
-                    {Array.isArray(item.Names) && item.Names.map((cell: any) => {
-                        return <>{cell}</>
+                    {Array.isArray(item.Names) && item.Names.map((cell: any,index) => {
+                        return (
+                            <div key={index}>{cell}</div>
+                        )
                     })}
                 </div>
             }
@@ -84,13 +87,15 @@ export function Containers() {
     }, [])
 
     return (
-        <div className="App">
-            <AntTable
-                rowKey="Id"
-                columns={columns}
-                dataSource={containers}
-                pagination={false}
-            />
-        </div>
+        <Layout>
+            <div className="App">
+                <AntTable
+                    rowKey="Id"
+                    columns={columns}
+                    dataSource={containers}
+                    pagination={false}
+                />
+            </div>
+        </Layout>
     )
 }

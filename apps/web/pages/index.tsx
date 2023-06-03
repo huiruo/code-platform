@@ -2,6 +2,7 @@ import { SourceCodeEditor } from "@editor/SourceCodeEditor";
 import { fetchCode, getRunningContainerApi, getContainerStatusApi, runCodeApi, stopContainerApi, startContainerApi, buildImageApi } from "@services/api";
 import { useRef } from "react";
 import { Button } from "ui";
+import Layout from "@components/layout";
 
 export default function Web() {
   const editorRef: any = useRef(null);
@@ -63,38 +64,40 @@ export default function Web() {
   }
 
   return (
-    <div>
-      <h1>Web</h1>
-      {/* <Button /> */}
-      {/* <div>
+      <Layout>
+          <div>
+              <h1>Web</h1>
+              {/* <Button /> */}
+              {/* <div>
         <button onClick={onRun}>run</button>
       </div> */}
 
-      <div>
-        <button onClick={onGetContainerStatus}>get Container Status</button>
-      </div>
+              <div>
+                  <button onClick={onGetContainerStatus}>get Container Status</button>
+              </div>
 
-      <div>
-        <button onClick={onGetRunningContainer}>get Running Container</button>
-      </div>
+              <div>
+                  <button onClick={onGetRunningContainer}>get Running Container</button>
+              </div>
 
-      <div>
-        <button onClick={onStopContainer}>stop Container</button>
-      </div>
+              <div>
+                  <button onClick={onStopContainer}>stop Container</button>
+              </div>
 
-      <div>
-        <button onClick={onRunJs}>run js</button>
-      </div>
+              <div>
+                  <button onClick={onRunJs}>run js</button>
+              </div>
 
-      <div>
-        <button onClick={onStartContainer}>Start Container</button>
-      </div>
+              <div>
+                  <button onClick={onStartContainer}>Start Container</button>
+              </div>
 
-      <div>
-        <button onClick={onBuildImage}>build Image</button>
-      </div>
+              <div>
+                  <button onClick={onBuildImage}>build Image</button>
+              </div>
 
-      <SourceCodeEditor ref={editorRef} />
-    </div>
+              <SourceCodeEditor ref={editorRef} />
+          </div>
+      </Layout>
   );
 }
