@@ -13,7 +13,7 @@ export const Header = () => {
                 <ul className='ul'>
 
                     <li className='li'>
-                        <Link href="/" className={pathname === '/' ? 'nav-active' : ''}>Home</Link>
+                        <Link href="/editor" className={pathname === '/editor' ? 'nav-active' : ''}>Home</Link>
                     </li>
 
                     <li className='li'>

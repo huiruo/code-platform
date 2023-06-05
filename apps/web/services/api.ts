@@ -93,6 +93,7 @@ export async function buildImageApi(params: BuildImage): Promise<any> {
 }
 
 export async function listImagesApi(): Promise<any> {
+  console.log('listImagesApi:',`${baseUrl}/code-engine/listImg`)
   try {
     return fetch(`${baseUrl}/code-engine/listImg`, {
       method: 'GET',

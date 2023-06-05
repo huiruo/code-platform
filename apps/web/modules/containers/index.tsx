@@ -73,7 +73,6 @@ export function Containers() {
         const params = {isRunning}
         const res = await listContainersApi(params)
         const data = await res.json();
-        console.log('data', data)
         if (data.code === 1) {
             setContainers(data.data)
         } else {

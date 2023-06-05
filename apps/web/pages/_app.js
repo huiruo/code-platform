@@ -1,24 +1,14 @@
-// import App from 'next/app'
+import App from "next/app";
+import NiceModal from '@common/nice-modal'
 import 'antd/dist/reset.css';
 import '../styles/index.scss'
 import '../styles/header.scss'
-//
-// const MyApp = () =>{
-//    return(
-//        <App />
-//    )
-// }
-//
-// export default MyApp
-
-import App from "next/app";
-import { MyProvider } from "../path/to/provider";
 
 function MyApp({ Component, pageProps }) {
     return (
-        <MyProvider>
+        <NiceModal.Provider>
             <App Component={Component} pageProps={pageProps} />
-        </MyProvider>
+        </NiceModal.Provider>
     );
 }
 
