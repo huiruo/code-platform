@@ -41,6 +41,7 @@ export interface NiceModalHandler<Props = Record<string, unknown>> extends NiceM
      * If you don't want to remove the modal from the tree after hide when using helpers, set it to true.
      */
     keepMounted: boolean
+    // @ts-ignore
     /**
      * Show the modal, it will change {@link NiceModalHandler.visible | visible} state to true.
      * @param args - an object passed to modal component as props.
