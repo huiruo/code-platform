@@ -13,7 +13,10 @@ module.exports = {
         // 接口前缀带上`/code-platform/`
         source: '/code-platform/:path*',
         // destination: 'http://localhost:3888/:path*'
-        destination: 'http://192.168.186.118:3888/:path*'
+        // home
+        // destination: 'http://192.168.186.118:3888/:path*'
+        // office
+        destination: 'http://172.16.39.156:3888/:path*'
       }
     ]
   }
