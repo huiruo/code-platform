@@ -1,5 +1,5 @@
 import NiceModal, { useModal } from '@common/nice-modal'
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 import { useSignStatus } from "@components/modalSign/hooks";
 
 export const ModalSign = NiceModal.create(({ }) => {
@@ -12,10 +12,15 @@ export const ModalSign = NiceModal.create(({ }) => {
 
     console.log('process.env.NODE_ENV:', process.env.NODE_ENV, { HOST, googleAuthUrl })
 
+    const onGoogleLogin = async () => {
+        console.log('onGoogleLogin',)
+    }
+
     return (
         <Modal open={visible} onCancel={hide}>
             <div>
                 <a href={googleAuthUrl}>登录</a>
+                <Button onClick={onGoogleLogin}>登录</Button>
             </div>
         </Modal>
     )

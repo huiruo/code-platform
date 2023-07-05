@@ -1,47 +1,101 @@
-import React from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import Images from "../pages/images";
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import Image from 'next/image'
+import { useState } from 'react'
 
-export const Header = () => {
-    const {pathname} = useRouter();
-    console.log('Header pathname',pathname)
+export function Header() {
+  const { pathname } = useRouter();
+  console.log('Header pathname', pathname)
+  const [user, mutateUser] = useState({ isLoggedIn: false, avatarUrl: '' })
+  const router = useRouter()
 
-    return (
-        <div className='header-container nav-div-shadow'>
-            <div className='header-content container'>
-                <ul className='ul'>
+  return (
+    <header>
+      <nav className='header-container nav-div-shadow'>
+        <ul className='left-ul'>
+          <li className='li'>
+            <Link href="/editor" className={pathname === '/editor' ? 'nav-active' : ''}>Home</Link>
+          </li>
 
-                    <li className='li'>
-                        <Link href="/editor" className={pathname === '/editor' ? 'nav-active' : ''}>Home</Link>
-                    </li>
+          <li className='li'>
+            <Link href="/containers" className={pathname === '/containers' ? 'nav-active' : ''}>Containers</Link>
+          </li>
 
-                    <li className='li'>
-                        <Link href="/containers" className={pathname === '/containers' ? 'nav-active' : ''}>Containers</Link>
-                    </li>
+          <li className='li'>
+            <Link href="/images" className={pathname === '/images' ? 'nav-active' : ''}>Images</Link>
+          </li>
 
-                    <li className='li'>
-                        <Link href="/images" className={pathname === '/images' ? 'nav-active' : ''}>Images</Link>
-                    </li>
+          <li className='li'>
+            <Link href="/trade/future/order" className={pathname === '/trade/future/order' ? 'nav-active' : ''}>Future</Link>
+          </li>
+        </ul>
 
-                    <li className='li'>
-                        <Link href="/trade/future/order" className={pathname === '/trade/future/order' ? 'nav-active' : ''}>Future</Link>
-                    </li>
-
-                    <li className='li'>
-                        <Link href="/trade/balances" className={pathname === '/trade/balances' ? 'nav-active' : ''}>Balances</Link>
-                    </li>
-
-                    <li className='li'>
-                        <Link href="/coin/list" className={pathname === '/coin/list' ? 'nav-active' : ''}>Coin list</Link>
-                    </li>
-
-                    <li className='li'>
-                        <Link href="/ws/market" className={pathname === '/ws/market' ? 'nav-active' : ''}>Ws market</Link>
-                    </li>
-
-                </ul>
-            </div>
-        </div>
-    );
+        <ul className='right-ul'>
+          {user?.isLoggedIn === false && (
+            <li>
+              <Link href="/login" legacyBehavior>
+                <a>Login</a>
+              </Link>
+            </li>
+          )}
+          {user?.isLoggedIn === true && (
+            <>
+              <li>
+                <Link href="/profile-sg" legacyBehavior>
+                  <a>
+                    <span
+                      style={{
+                        marginRight: '.3em',
+                        verticalAlign: 'middle',
+                        borderRadius: '100%',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <Image
+                        src={user.avatarUrl}
+                        width={32}
+                        height={32}
+                        alt=""
+                      />
+                    </span>
+                    Profile (Static Generation, recommended)
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/profile-ssr" legacyBehavior>
+                  <a>Profile (Server-side Rendering)</a>
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="/api/logout"
+                  onClick={async (e) => {
+                    e.preventDefault()
+                    // mutateUser(
+                    //   await fetchJson('/api/logout', { method: 'POST' }),
+                    //   false
+                    // )
+                    router.push('/login')
+                  }}
+                >
+                  Logout
+                </a>
+              </li>
+            </>
+          )}
+          <li>
+            <a href="https://github.com/vvo/iron-session">
+              <Image
+                src="/GitHub-Mark-Light-32px.png"
+                width="32"
+                height="32"
+                alt=""
+              />
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  )
 }

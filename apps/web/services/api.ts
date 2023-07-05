@@ -184,3 +184,25 @@ export async function stopContainerApi(params: Container): Promise<any> {
     }
   }
 }
+
+export async function fetchUserApi(accessToken: string): Promise<any> {
+  try {
+    // const url = 'http://192.168.186.118:3888'
+    const url = 'http://172.16.39.156:3888'
+    // return fetch(`${baseUrl}/user/auth`, {
+    return fetch(`${url}/user/auth`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: '{}',
+    })
+  } catch (error) {
+    console.error('NetWork Error', error)
+    return {
+      code: 0,
+      message: error,
+    }
+  }
+}
