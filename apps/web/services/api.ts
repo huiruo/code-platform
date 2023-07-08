@@ -1,208 +1,119 @@
 import { BuildImage, Container, GetContainers, TaskCode } from "types"
+import { getCookie } from 'cookies-next'
 
 const baseUrl = '/code-platform'
 
-export async function fetchCode(params?: any): Promise<any> {
-  try {
-    return fetch(`${baseUrl}/code-engine/codeList`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-    })
-  } catch (error) {
-    console.error('NetWork Error', error)
-    return {
-      code: 0,
-      message: error,
-    }
-  }
+interface Options {
+  [key: string]: string | boolean | object;
 }
 
-export async function runCodeApi(params: TaskCode): Promise<any> {
-  try {
-    return fetch(`${baseUrl}/code-engine/runCode`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-    })
-  } catch (error) {
-    console.error('NetWork Error', error)
-    return {
-      code: 0,
-      message: error,
-    }
-  }
+interface ApiConfig {
+  codeList: string;
+  runCode: string;
+  getContainerStatus: string;
+  getRunningContainer: string;
+  buildDockerImage: string;
+  listImg: string;
+  listContainers: string;
+  startContainer: string;
+  stopContainer: string;
+  getUser: string;
+
+  // Add more API endpoints here...
+  [key: string]: string;
 }
 
-export async function getContainerStatusApi(params: Container): Promise<any> {
-  try {
-    return fetch(`${baseUrl}/code-engine/getContainerStatus`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-    })
-  } catch (error) {
-    console.error('NetWork Error', error)
-    return {
-      code: 0,
-      message: error,
-    }
-  }
+const apiConfig: ApiConfig = {
+  codeList: '/code-engine/codeList',
+  runCode: '/code-engine/runCode',
+  getContainerStatus: '/code-engine/getContainerStatus',
+  getRunningContainer: '/code-engine/getRunningContainer',
+  buildDockerImage: '/code-engine/buildDockerImage',
+  listImg: '/code-engine/listImg',
+  listContainers: '/code-engine/listContainers',
+  startContainer: '/code-engine/startContainer',
+  stopContainer: '/code-engine/stopContainer',
+  getUser: '/user/auth',
+};
+
+interface Api {
+  codeList: (options?: Options) => Promise<any>;
+  runCode: (options?: Options) => Promise<any>;
+  getContainerStatus: (options?: Options) => Promise<any>;
+  getRunningContainer: (options?: Options) => Promise<any>;
+  buildDockerImage: (options?: Options) => Promise<any>;
+  listImg: (options?: Options) => Promise<any>;
+  listContainers: (options: Options) => Promise<any>;
+  startContainer: (options?: Options) => Promise<any>;
+  stopContainer: (options?: Options) => Promise<any>;
+  getUser: (options?: Options) => Promise<any>;
 }
 
-export async function getRunningContainerApi(params?: any): Promise<any> {
-  try {
-    return fetch(`${baseUrl}/code-engine/getRunningContainer`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-    })
-  } catch (error) {
-    console.error('NetWork Error', error)
-    return {
-      code: 0,
-      message: error,
-    }
-  }
+// interface FetchOptions extends RequestInit {
+interface FetchOptions extends Omit<RequestInit, 'body'> {
+  headers?: {
+    Authorization: string;
+  };
+  body?: unknown
 }
 
-export async function buildImageApi(params: BuildImage): Promise<any> {
-  try {
-    return fetch(`${baseUrl}/code-engine/buildDockerImage`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-    })
-  } catch (error) {
-    console.error('NetWork Error', error)
-    return {
-      code: 0,
-      message: error,
-    }
-  }
-}
+const fetchWithAuth = async (url: string, options: FetchOptions = {}, method = 'POST'): Promise<any> => {
 
-export async function listImagesApi(): Promise<any> {
-  console.log('listImagesApi:',`${baseUrl}/code-engine/listImg`)
-  try {
-    return fetch(`${baseUrl}/code-engine/listImg`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-  } catch (error) {
-    console.error('NetWork Error', error)
-    return {
-      code: 0,
-      message: error,
-    }
-  }
-}
+  const token = getCookie('token');
 
-export async function listContainersApi(params: GetContainers): Promise<any> {
-  try {
-    return fetch(`${baseUrl}/code-engine/listContainers`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-    })
-  } catch (error) {
-    console.error('NetWork Error', error)
-    return {
-      code: 0,
-      message: error,
-    }
-  }
-}
+  const response = await fetch(url, {
+    ...options,
+    method,
+    headers: {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(options.body),
+  });
 
-// 运行镜像的形式启动容器
-export async function runDockerUseImgApi(params: GetContainers): Promise<any> {
-  try {
-    return fetch(`${baseUrl}/code-engine/buildDockerImage`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-    })
-  } catch (error) {
-    console.error('NetWork Error', error)
-    return {
-      code: 0,
-      message: error,
-    }
-  }
-}
+  return response.json();
+};
 
-// 运行已有容器
-export async function startContainerApi(params: Container): Promise<any> {
-  try {
-    return fetch(`${baseUrl}/code-engine/startContainer`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-    })
-  } catch (error) {
-    console.error('NetWork Error', error)
-    return {
-      code: 0,
-      message: error,
-    }
+export const services: Api = {
+  codeList: async (options: { [key: string]: any; } = {}): Promise<any> => {
+    const url = `${baseUrl}${apiConfig.codeList}`;
+    return fetchWithAuth(url, { body: options },'GET');
+  },
+  runCode: async (options: { [key: string]: any; } = {}): Promise<any> => {
+    const url = `${baseUrl}${apiConfig.runCode}`;
+    return fetchWithAuth(url, { body: options });
+  },
+  getContainerStatus: async (options: { [key: string]: any; } = {}): Promise<any> => {
+    const url = `${baseUrl}${apiConfig.getContainerStatus}`;
+    return fetchWithAuth(url, { body: options });
+  },
+  getRunningContainer: async (options: { [key: string]: any; } = {}): Promise<any> => {
+    const url = `${baseUrl}${apiConfig.getRunningContainer}`;
+    return fetchWithAuth(url, { body: options },'GET');
+  },
+  buildDockerImage: async (options: { [key: string]: any; } = {}): Promise<any> => {
+    const url = `${baseUrl}${apiConfig.buildDockerImage}`;
+    return fetchWithAuth(url, { body: options });
+  },
+  listImg: async (options: { [key: string]: any; } = {}): Promise<any> => {
+    const url = `${baseUrl}${apiConfig.listImg}`;
+    return fetchWithAuth(url, { body: options },'GET');
+  },
+  listContainers: async (options: { [key: string]: any; } = {}): Promise<any> => {
+    const url = `${baseUrl}${apiConfig.listContainers}`;
+    return fetchWithAuth(url, { body: options });
+  },
+  startContainer: async (options: { [key: string]: any; } = {}): Promise<any> => {
+    const url = `${baseUrl}${apiConfig.startContainer}`;
+    return fetchWithAuth(url, { body: options });
+  },
+  stopContainer: async (options: { [key: string]: any; } = {}): Promise<any> => {
+    const url = `${baseUrl}${apiConfig.stopContainer}`;
+    return fetchWithAuth(url, { body: options });
+  },
+  getUser: async (options: { [key: string]: any; } = {}): Promise<any> => {
+    const url = `${baseUrl}${apiConfig.getUser}`;
+    return fetchWithAuth(url, { body: options });
   }
-}
-
-// 停止运行的容器
-export async function stopContainerApi(params: Container): Promise<any> {
-  try {
-    return fetch(`${baseUrl}/code-engine/stopContainer`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-    })
-  } catch (error) {
-    console.error('NetWork Error', error)
-    return {
-      code: 0,
-      message: error,
-    }
-  }
-}
-
-export async function fetchUserApi(accessToken: string): Promise<any> {
-  try {
-    // const url = 'http://192.168.186.118:3888'
-    const url = 'http://172.16.39.156:3888'
-    // return fetch(`${baseUrl}/user/auth`, {
-    return fetch(`${url}/user/auth`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: '{}',
-    })
-  } catch (error) {
-    console.error('NetWork Error', error)
-    return {
-      code: 0,
-      message: error,
-    }
-  }
-}
+};

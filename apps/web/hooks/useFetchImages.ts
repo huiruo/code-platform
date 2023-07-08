@@ -1,4 +1,4 @@
-import { listImagesApi } from '@services/api';
+import { services } from '@services/api';
 import { useState, useEffect } from 'react';
 
 interface ImgType {
@@ -19,8 +19,7 @@ const useFetchImg = (): [(ImgType[]), boolean, (Error | null)] => {
       setIsLoading(true);
 
       try {
-        const res = await listImagesApi()
-        const data = await res.json();
+        const data = await services.listImg()
         if (data.code === 1) {
           setData(data.data);
         } else {

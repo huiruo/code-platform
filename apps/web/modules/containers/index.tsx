@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Button,message} from 'antd';
 import {Pagination, Table as AntTable} from 'antd';
-import {listContainersApi, startContainerApi,stopContainerApi} from '@services/api';
 import Layout from "@components/layout";
+import { services } from '@services/api';
 
 export function Containers() {
     const [containers, setContainers] = useState([])
@@ -10,8 +10,7 @@ export function Containers() {
     const onRunContainer = async (item) =>{
         console.log('docker',item)
         const params = {...item,containerName:item.Names?.[0]}
-        const res = await startContainerApi(params)
-        const data = await res.json();
+        const data = await services.startContainer(params)
         console.log('onRunImg-res', data)
         if (data.code === 1) {
             message.success(data.msg)
@@ -26,8 +25,7 @@ export function Containers() {
     const onStopContainer = async(item) =>{
         console.log('onStopImg')
         const params = {...item,containerName:item.Names?.[0]}
-        const res = await stopContainerApi(params)
-        const data = await res.json();
+        const data = await services.stopContainer(params)
         console.log('onRunImg-res', data)
         if (data.code === 1) {
             message.success(data.msg)
@@ -71,8 +69,9 @@ export function Containers() {
 
     const listContainers = async (isRunning= false) => {
         const params = {isRunning}
-        const res = await listContainersApi(params)
-        const data = await res.json();
+        const data = await services.listContainers(params)
+        // const data = await res.json();
+        console.log('data:',data)
         if (data.code === 1) {
             setContainers(data.data)
         } else {

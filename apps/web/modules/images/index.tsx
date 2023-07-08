@@ -2,7 +2,7 @@ import React from 'react';
 import useFetchImg from '@hooks/useFetchImages';
 import {Button} from 'antd';
 import {Pagination, Table as AntTable} from 'antd';
-import {runDockerUseImgApi} from '@services/api';
+import { services } from '@services/api';
 
 export function Image() {
     const [images, isLoading, error] = useFetchImg()
@@ -12,7 +12,7 @@ export function Image() {
 
     const onRunImg = async (item) =>{
         const params = {...item}
-        const res = await runDockerUseImgApi(params)
+        const res = await services.buildDockerImage(params)
         const data = await res.json();
         console.log('onRunImg-res', data)
         if (data.code === 1) {

@@ -2,7 +2,7 @@ import React, { useState, useRef, useImperativeHandle, forwardRef } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 import Editor from '@monaco-editor/react'
 import type monaco from 'monaco-editor'
-import { runCodeApi } from '@services/api'
+import { services } from '@services/api';
 
 const langMap: Record<any, string> = {
   py: 'python',
@@ -27,10 +27,7 @@ export const SourceCodeEditor = forwardRef((props, ref) => {
         console.log('please enter code')
         return
       }
-
-      const res = await runCodeApi({ type: 'js', code: value })
-      console.log('res', res)
-      const data = await res.json();
+      const data = await services.runCode({ type: 'js', code: value })
       console.log('onRunJs', data)
     },
   }));

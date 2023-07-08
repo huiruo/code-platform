@@ -1,5 +1,5 @@
 import { SourceCodeEditor } from "@editor/SourceCodeEditor";
-import { fetchCode, getRunningContainerApi, getContainerStatusApi, runCodeApi, stopContainerApi, startContainerApi, buildImageApi } from "@services/api";
+import { services } from '@services/api';
 import { useRef } from "react";
 import { Button } from "ui";
 import Layout from "@components/layout";
@@ -26,30 +26,27 @@ export default function Web() {
   const onGetContainerStatus = async () => {
     const containerName = '1874f672f0a7'
     // const containerName = '173063551e6f' // nginx
-    const res = await getContainerStatusApi({ containerName })
+    const res = await services.getContainerStatus({ containerName })
     const data = await res.json();
     console.log('getRunningContainerApi', data)
   }
 
   const onGetRunningContainer = async () => {
-    const res = await getRunningContainerApi()
-    const data = await res.json();
+    const data = await services.getRunningContainer()
     console.log('getRunningContainerApi', data)
   }
 
   const onStopContainer = async () => {
     // const containerName = '1874f672f0a7'
     const containerName = '173063551e6f' // nginx
-    const res = await stopContainerApi({ containerName })
-    const data = await res.json();
+    const data = await services.stopContainer({ containerName })
     console.log('onStopContainer', data)
   }
 
   const onStartContainer = async () => {
     const containerName = '1874f672f0a7' // exited
     // const containerName = '173063551e6f' // nginx
-    const res = await startContainerApi({ containerName })
-    const data = await res.json();
+    const data = await services.startContainer({ containerName })
     console.log('onStopContainer', data)
   }
 
@@ -58,8 +55,7 @@ export default function Web() {
       dockerfileName: 'node.client',
       imageName: 'node-client'
     }
-    const res = await buildImageApi(params)
-    const data = await res.json();
+    const data = await services.buildDockerImage(params)
     console.log('onStopContainer', data)
   }
 

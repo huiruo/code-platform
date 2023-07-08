@@ -1,3 +1,12 @@
+/** 登录成功返回给客户端的数据 */
+export type LoginSuccessPayload = {
+  siteName?: string
+  token: string
+  user: string
+  userId: number
+  username?: string
+};
+
 export interface Container {
   containerName: string
 }
