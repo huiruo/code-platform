@@ -1,4 +1,4 @@
-import Layout from "@components/layout";
+import Layout from "@layouts/layout";
 import { Image } from '../modules'
 
 export default function Images() {

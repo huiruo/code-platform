@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Button,message} from 'antd';
 import { Pagination, Table as AntTable } from 'antd';
-import Layout from "@components/layout";
+import Layout from "@layouts/layout";
 import { services } from '@services/api';
 import useListContainers from '@hooks/useListContainers';
 import { LoginSuccessPayload } from 'types';

@@ -2,7 +2,7 @@ import { SourceCodeEditor } from "@editor/SourceCodeEditor";
 import { services } from '@services/api';
 import { useRef } from "react";
 import { Button } from "ui";
-import Layout from "@components/layout";
+import Layout from "@layouts/layout";
 
 export default function Web() {
   const editorRef: any = useRef(null);
