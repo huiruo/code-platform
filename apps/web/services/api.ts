@@ -61,18 +61,28 @@ const fetchWithAuth = async (url: string, options: FetchOptions = {}, method = '
 
   const token = getCookie('token');
 
-  const response = await fetch(url, {
-    ...options,
-    method,
-    headers: {
-      ...options.headers,
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(options.body),
-  });
+  try {
+    const response = await fetch(url, {
+      ...options,
+      method,
+      headers: {
+        ...options.headers,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(options.body),
+    });
 
-  return response.json();
+    if(response.status === 401){
+      window.location.href = '/';
+
+      return
+    }
+
+    return response.json();
+  } catch (error) {
+    console.log('fetchWithAuth error',error)
+  }
 };
 
 export const services: Api = {

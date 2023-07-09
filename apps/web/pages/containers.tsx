@@ -2,9 +2,14 @@ import { useEffect } from "react";
 import { Containers } from "../modules";
 import { withIronSessionSsr } from 'iron-session/next'
 import { sessionOptions } from "@common/session";
-import { setCookie, getCookie, hasCookie } from 'cookies-next'
+import { setCookie, getCookie } from 'cookies-next'
+import { LoginSuccessPayload } from "types";
 
-export default function Container({ payload }) {
+interface Props {
+  payload: LoginSuccessPayload
+}
+
+export default function Container({ payload } : Props) {
 
   useEffect(() => {
     if(payload.token && getCookie('token') !== payload.token){
@@ -13,13 +18,15 @@ export default function Container({ payload }) {
     }else{
       console.log('token是否存在',getCookie('token'))
     }
+
+    console.log('containers-page-useEffect')
   },[]);
 
   console.log('containers-render',payload)
 
   return (
     <>
-      <Containers />
+      <Containers payload={ payload } />
     </>
   );
 }

@@ -7,8 +7,6 @@ export const ModalSign = NiceModal.create(({ }) => {
     const { status } = useSignStatus()
     const { visible, hide } = useModal()
 
-    console.log('ModalSign==>process.env.NODE_ENV:', process.env.NODE_ENV, { googleAuthUrl })
-
     const onGoogleLogin = async () => {
         console.log('onGoogleLogin',)
     }

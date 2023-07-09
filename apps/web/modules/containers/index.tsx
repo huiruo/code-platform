@@ -1,21 +1,29 @@
 import React, {useEffect, useState} from 'react';
-import {Button,message} from 'antd';
-import {Pagination, Table as AntTable} from 'antd';
+import { Button,message} from 'antd';
+import { Pagination, Table as AntTable } from 'antd';
 import Layout from "@components/layout";
 import { services } from '@services/api';
+import useListContainers from '@hooks/useListContainers';
+import { LoginSuccessPayload } from 'types';
+ 
+interface Props {
+  payload: LoginSuccessPayload
+}
 
-export function Containers() {
-    const [containers, setContainers] = useState([])
+export function Containers({ payload } : Props) {
+    const { loading, data = [], refetch } = useListContainers({ token: payload.token });
+
+    console.log('Containers-component-render',{ loading, data })
 
     const onRunContainer = async (item) =>{
         console.log('docker',item)
         const params = {...item,containerName:item.Names?.[0]}
         const data = await services.startContainer(params)
-        console.log('onRunImg-res', data)
+        console.log('onRunContainer-res', data)
         if (data.code === 1) {
             message.success(data.msg)
             console.log('重新刷新数据2')
-            listContainers()
+            refetch()
         } else {
             const isObject = Object.prototype.toString.call(data.msg) ==='[object Object]'
             message.warning(isObject?JSON.stringify(data.msg):data.msg)
@@ -23,14 +31,13 @@ export function Containers() {
     }
 
     const onStopContainer = async(item) =>{
-        console.log('onStopImg')
         const params = {...item,containerName:item.Names?.[0]}
         const data = await services.stopContainer(params)
-        console.log('onRunImg-res', data)
+        console.log('onStopContainer-res', data)
         if (data.code === 1) {
             message.success(data.msg)
             console.log('重新刷新数据1')
-            listContainers()
+            refetch()
         } else {
             const isObject = Object.prototype.toString.call(data.msg) ==='[object Object]'
             message.warning(isObject?JSON.stringify(data.msg):data.msg)
@@ -67,22 +74,11 @@ export function Containers() {
         },
     ]
 
-    const listContainers = async (isRunning= false) => {
-        const params = {isRunning}
-        const data = await services.listContainers(params)
-        // const data = await res.json();
-        console.log('data:',data)
-        if (data.code === 1) {
-            setContainers(data.data)
-        } else {
-            const isObject = Object.prototype.toString.call(data.msg) ==='[object Object]'
-            message.warning(isObject?JSON.stringify(data.msg):data.msg)
-        }
-    }
-
     useEffect(() => {
-        listContainers()
+        console.log('containers-component-useEffect')
     }, [])
+
+    if (loading) return null
 
     return (
         <Layout>
@@ -90,7 +86,8 @@ export function Containers() {
                 <AntTable
                     rowKey="Id"
                     columns={columns}
-                    dataSource={containers}
+                    // 消除 TypeScript 中的警告
+                    dataSource={data?.length ? data : undefined}
                     pagination={false}
                 />
             </div>

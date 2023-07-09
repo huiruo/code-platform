@@ -5,6 +5,7 @@ import '../styles/index.scss'
 import '../styles/header.scss'
 
 function MyApp({ Component, pageProps }) {
+
     return (
         <NiceModal.Provider>
             <App Component={Component} pageProps={pageProps} />
