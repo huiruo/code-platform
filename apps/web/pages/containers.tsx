@@ -1,25 +1,25 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Containers } from "../modules";
 import { withIronSessionSsr } from 'iron-session/next'
 import { sessionOptions } from "@common/session";
-import { setCookie, getCookie } from 'cookies-next'
+// import { setCookie, getCookie } from 'cookies-next'
 import { LoginSuccessPayload } from "types";
 
 interface Props {
   payload: LoginSuccessPayload
+  token: string
 }
 
 export default function Container({ payload } : Props) {
-
   useEffect(() => {
-    if(payload.token && getCookie('token') !== payload.token){
-      setCookie('token',payload.token as string)
-      console.log('token重置')
-    }else{
-      console.log('token是否存在',getCookie('token'))
-    }
+    // if(payload.token && getCookie('token') !== payload.token){
+    //   setCookie('token',payload.token as string)
+    //   console.log('token重置')
+    // }else{
+    //   console.log('token是否存在',getCookie('token'))
+    // }
 
-    console.log('containers-page-useEffect')
+    // console.log('containers-page-useEffect')
   },[]);
 
   console.log('containers-render',payload)
@@ -37,6 +37,8 @@ export const getServerSideProps = withIronSessionSsr(async ({ req }) => {
   console.log('containers->getServerSideProps-1',{ payload })
 
   if (payload) {
+    console.log('getServerSideProps-setToken',payload.token)
+
     return {
       props: { payload },
     }
@@ -49,3 +51,4 @@ export const getServerSideProps = withIronSessionSsr(async ({ req }) => {
     },
   }
 }, sessionOptions)
+

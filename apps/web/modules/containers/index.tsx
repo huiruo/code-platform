@@ -5,12 +5,18 @@ import Layout from "@components/layout";
 import { services } from '@services/api';
 import useListContainers from '@hooks/useListContainers';
 import { LoginSuccessPayload } from 'types';
+import { useAppSelector } from '@stores/hooks';
+import { countState } from '@stores/appSlice';
+import { appStoreActions } from "@stores/appSlice";
+import { useDispatch } from 'react-redux';
  
 interface Props {
   payload: LoginSuccessPayload
 }
 
 export function Containers({ payload } : Props) {
+    const count = useAppSelector(countState)
+    const dispatch = useDispatch()
     const { loading, data = [], refetch } = useListContainers({ token: payload.token });
 
     console.log('Containers-component-render',{ loading, data })
@@ -74,6 +80,11 @@ export function Containers({ payload } : Props) {
         },
     ]
 
+    const onAdd = () =>{
+        let temp = count
+        dispatch(appStoreActions.setCount(temp +1))
+    }
+
     useEffect(() => {
         console.log('containers-component-useEffect')
     }, [])
@@ -90,6 +101,12 @@ export function Containers({ payload } : Props) {
                     dataSource={data?.length ? data : undefined}
                     pagination={false}
                 />
+                <div>
+                    test: { count }
+                </div>
+                <div>
+                    <Button onClick={onAdd}>test add</Button>
+                </div>
             </div>
         </Layout>
     )

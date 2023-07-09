@@ -1,5 +1,7 @@
 import { BuildImage, Container, GetContainers, TaskCode } from "types"
-import { getCookie } from 'cookies-next'
+import { getCookie, setCookie } from 'cookies-next'
+import { appStoreActions } from "@stores/appSlice";
+import store from '@stores/index'
 
 const baseUrl = '/code-platform'
 
@@ -58,8 +60,8 @@ interface FetchOptions extends Omit<RequestInit, 'body'> {
 }
 
 const fetchWithAuth = async (url: string, options: FetchOptions = {}, method = 'POST'): Promise<any> => {
-
   const token = getCookie('token');
+  console.log('旧token',token)
 
   try {
     const response = await fetch(url, {
@@ -74,9 +76,18 @@ const fetchWithAuth = async (url: string, options: FetchOptions = {}, method = '
     });
 
     if(response.status === 401){
-      window.location.href = '/';
+      // window.location.href = '/';
+      console.log('重定向===>')
+      store.dispatch(appStoreActions.setCount(9))
 
       return
+    }
+
+    const newToken = response.headers.get('Authorization');
+    console.log('newToken:',newToken)
+    if(newToken){
+      setCookie('token',newToken)
+      appStoreActions.setCount(99)
     }
 
     return response.json();
