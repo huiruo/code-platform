@@ -1,18 +1,22 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { services } from '@services/api';
 import { message } from 'antd';
-import { setCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 
-const useListContainers = ({ token }) => {
+interface ListContainersType {
+  loginToken: string
+}
+
+const useListContainers = ({ loginToken }: ListContainersType) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
-
 
   const listContainers = async (isRunning = false) => {
       const params = { isRunning }
       try {
         const data = await services.listContainers(params)
-        if (data.code === 1) {
+        console.log('listContainers==>',data)
+        if (data?.code === 1) {
           setData(data.data)
           setLoading(false);
         } else {
@@ -27,18 +31,21 @@ const useListContainers = ({ token }) => {
   }
 
   useEffect(() => {
-    if (!token) {
+    if (!loginToken) {
       return;
     }
 
-    console.log('useListContainers--useEffect',token)
-
-    setCookie('token',token)
+    const isExpired = sessionStorage.getItem('isTokenExpired') 
+    const cookieToken = getCookie('token')
+    if(isExpired !=='1' && !cookieToken){
+      sessionStorage.setItem('isTokenExpired', '1') 
+      setCookie('token',loginToken)
+    }
 
     setLoading(true);
 
     listContainers();
-  }, [token]);
+  }, []);
 
   const refetch = (isRunning?: boolean) => {
     setLoading(true);

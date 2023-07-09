@@ -16,10 +16,9 @@ interface Props {
 
 export function Containers({ payload } : Props) {
     const count = useAppSelector(countState)
-    const dispatch = useDispatch()
-    const { loading, data = [], refetch } = useListContainers({ token: payload.token });
+    const { loading, data = [], refetch } = useListContainers({ loginToken: payload.token });
 
-    console.log('Containers-component-render',{ loading, data })
+    const dispatch = useDispatch()
 
     const onRunContainer = async (item) =>{
         console.log('docker',item)

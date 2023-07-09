@@ -3,12 +3,10 @@ import { RootState } from './index'
 
 interface AppState {
   count: number
-  token: string 
 }
 
 const initialState: AppState = {
   count: 6,
-  token: ''
 }
 
 const appStoreSlice = createSlice({
@@ -34,9 +32,6 @@ export const store = configureStore({
 
 export const appStoreActions = appStoreSlice.actions
 
-export const tokenState = (state: RootState) => state.appStore.token
-
-export const countState = (state: RootState) =>
-  state.appStore.count
+export const countState = (state: RootState) => state.appStore.count
 
 export default appStoreSlice.reducer
